@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ locale }}">
   <head>
-     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/dist/app.min.css">
-    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Have your accounts been leaked or stolen in a data breach? Find out at Firefox Monitor. Search our database and sign up for alerts." />
     <meta property="og:title" content="Firefox Monitor" />
@@ -12,12 +10,22 @@
     <meta property="og:url" content="{{ SERVER_URL }}" />
     <meta property="og:image" content="{{ SERVER_URL }}/img/firefox-monitor.png" />
     <meta name="theme-color" content="#002275" />
-    <title>{{ title }}</title>
-    <script type="text/javascript" src="/dist/app.min.js" defer></script>
+    <meta name="defaultLanguage" content="en">
+    <meta name="availableLanguages" content="{{ AVAILABLE_LANGUAGES }}">
+
+    <link rel="localization" href="/locales/{{ locale }}/app.ftl">
+
+    <link rel="stylesheet" href="/dist/app.min.css">
+    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
     <link rel="icon" href="/img/favicons/favicon-32.png" sizes="32x32" />
     <link rel="icon" href="/img/favicons/favicon-96.png" sizes="96x96" />
     <link rel="icon" href="/img/favicons/favicon-128.png" sizes="128x128" />
     <link rel="icon" href="/img/favicons/favicon-228.png" sizes="228x228" />
+
+    <script type="text/javascript" src="/js/l20n-min.js" defer></script>
+    <script type="text/javascript" src="/dist/app.min.js" defer></script>
+
+    <title>{{ title }}</title>
   </head>
   <body data-server-url="{{ SERVER_URL }}">
     <div id="content-wrap" class="content-wrap">
@@ -44,9 +52,9 @@
           <a {{> analytics/link_event eventLabel="Mozilla Logo"}} class="footer-logo-wrapper" href="https://www.mozilla.org/{{> analytics/utm_site_footer }}" target="_blank" rel="noopener"><img src="/img/moz-logo-bw-rgb.svg" alt="Mozilla Logo" /></a>
         </div>
         <ul class="third">
-          <li>Support</li>
-          <li><a {{> analytics/link_event eventLabel="Give Feedback"}} href="https://qsurvey.mozilla.com/s3/Firefox-Monitor-Feedback" target="_blank" rel="noopener">Give Feedback</a></li>
-          <li><a {{> analytics/link_event eventLabel="Terms & Privacy"}} href="https://www.mozilla.org/privacy/firefox-monitor/{{> analytics/utm_site_footer }}" target="_blank" rel="noopener">Terms&nbsp;and&nbsp;Privacy</a></li>
+          <li data-l10n-id="support">Support</li>
+          <li><a data-l10n-id="feedback" {{> analytics/link_event eventLabel="Give Feedback"}} href="https://qsurvey.mozilla.com/s3/Firefox-Monitor-Feedback" target="_blank" rel="noopener">Give Feedback</a></li>
+          <li><a data-l10n-id="terms" {{> analytics/link_event eventLabel="Terms & Privacy"}} href="https://www.mozilla.org/privacy/firefox-monitor/{{> analytics/utm_site_footer }}" target="_blank" rel="noopener">Terms&nbsp;and&nbsp;Privacy</a></li>
           <li><a {{> analytics/link_event eventLabel="GitHub"}} href="https://github.com/mozilla/blurts-server/" target="_blank" rel="noopener noreferrer"><img src="/img/github.svg" alt="GitHub Logo" /></a></li>
         </ul>
         <ul class="third">
@@ -59,7 +67,7 @@
       </div>
       <div class="section-wrapper">
         <div class="two-thirds copyright-info">
-          <p>Portions of this content are &copy; 1998-2018 by individual mozilla.org contributors. <br />Content available under a <a {{> analytics/link_event eventLabel="Creative Commons"}} href="https://www.mozilla.org/foundation/licensing/website-content/" target="_blank" rel="noopener">Creative Commons license</a>.</p>
+          <p data-l10n-id="copyright">Portions of this content are &copy; 1998-2018 by individual mozilla.org contributors. <br />Content available under a <a {{> analytics/link_event eventLabel="Creative Commons"}} href="https://www.mozilla.org/foundation/licensing/website-content/" target="_blank" rel="noopener">Creative Commons license</a>.</p>
         </div>
       </div>
     </footer>

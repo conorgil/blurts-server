@@ -11,7 +11,7 @@ const url = require("url");
 const EmailUtils = require("./email-utils");
 const HBSHelpers = require("./hbs-helpers");
 const HIBP = require("./hibp");
-const {logErrors, clientErrorHandler, errorHandler} = require("./middleware");
+const {pickLanguage, logErrors, clientErrorHandler, errorHandler} = require("./middleware");
 const mozlog = require("./log");
 
 const HibpRoutes = require("./routes/hibp");
@@ -101,6 +101,8 @@ app.use(sessions({
   cookie: cookie,
 }));
 
+app.use(pickLanguage);
+
 if (!AppConstants.DISABLE_DOCKERFLOW) {
   const DockerflowRoutes = require("./routes/dockerflow");
   app.use("/", DockerflowRoutes);
@@ -114,9 +116,7 @@ app.use("/ses", SesRoutes);
 app.use("/user", UserRoutes);
 app.use("/", HomeRoutes);
 
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
+app.use(logErrors, clientErrorHandler, errorHandler);
 
 EmailUtils.init().then(() => {
   const listener = app.listen(AppConstants.PORT, () => {
