@@ -12,6 +12,7 @@ const EmailUtils = require("./email-utils");
 const HBSHelpers = require("./hbs-helpers");
 const HIBP = require("./hibp");
 const {pickLanguage, logErrors, clientErrorHandler, errorHandler} = require("./middleware");
+const locale = require("./locale-utils");
 const mozlog = require("./log");
 
 const HibpRoutes = require("./routes/hibp");
@@ -36,6 +37,12 @@ if (app.get("env") !== "dev") {
       res.redirect("https://" + req.headers.host + req.url);
     }
   });
+}
+
+try {
+  locale.loadLanguagesIntoApp(app);
+} catch (error) {
+  log.error("try-load-languages-error", { error: error });
 }
 
 (async () => {
@@ -116,7 +123,9 @@ app.use("/ses", SesRoutes);
 app.use("/user", UserRoutes);
 app.use("/", HomeRoutes);
 
-app.use(logErrors, clientErrorHandler, errorHandler);
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
 
 EmailUtils.init().then(() => {
   const listener = app.listen(AppConstants.PORT, () => {

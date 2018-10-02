@@ -51,6 +51,7 @@ async function notify (req, res) {
     );
 
     if (!notifiedSubscribers.includes(email)) {
+      // TODO: l10n
       await EmailUtils.sendEmail(
         email,
         "Firefox Monitor Alert : Your account was involved in a breach.",

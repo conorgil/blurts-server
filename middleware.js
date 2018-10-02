@@ -1,7 +1,5 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
 
 const acceptLanguage = require("accept-language");
 
@@ -11,14 +9,14 @@ const mozlog = require("./log");
 const log = mozlog("middleware");
 
 
-function availableLanguages () {
-  return fs.readdirSync( path.join("public", "locales") );
-}
-
-
 function pickLanguage (req, res, next) {
-  acceptLanguage.languages(availableLanguages());
-  req.app.locals.locale = acceptLanguage.get(req.headers["accept-language"]);
+  acceptLanguage.languages(req.app.locals.AVAILABLE_LANGUAGES);
+  const pickedLanguage = acceptLanguage.get(req.headers["accept-language"]);
+  req.pickedLanguage = pickedLanguage;
+  const fluentBundle = req.app.locals.FLUENT_BUNDLES[pickedLanguage];
+  req.fluentFormat = (message, args = null, errors = null) => {
+    return fluentBundle.format(fluentBundle.getMessage(message, args));
+  };
   next();
 }
 

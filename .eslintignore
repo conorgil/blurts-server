@@ -3,4 +3,3 @@ coverage
 loadtests
 public/dist
 public/js/polyfills
-public/js/l20n-min.js

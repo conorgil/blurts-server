@@ -39,6 +39,7 @@ const HIBP = {
         log.info("_throttledGot", {err: "got a 429, tryCount: " + tryCount});
         if (tryCount >= AppConstants.HIBP_THROTTLE_MAX_TRIES) {
           log.error("_throttledGot", {err: err});
+          // TODO: l10n
           throw new Error("Too many connections to HIBP.");
         } else {
           tryCount++;
@@ -46,6 +47,7 @@ const HIBP = {
           return await this._throttledGot(url, reqOptions, tryCount);
         }
       } else {
+        // TODO: l10n
         throw new Error("Error connecting to HIBP.");
       }
     }
@@ -80,6 +82,7 @@ const HIBP = {
       app.locals.breachesLoadedDateTime = Date.now();
       app.locals.mostRecentBreachDateTime = this.getLatestBreachDateTime(breaches);
     } catch (error) {
+      // TODO: l10n
       throw new Error("Could not load breaches: " + error);
     }
     log.info("done-loading-breaches");

@@ -16,7 +16,7 @@ function breachDataClasses(dataClasses) {
 
 function prettyDate(date) {
   const jsDate = new Date(date);
-  // TODO: localize this
+  // TODO: l10n
   return jsDate.toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric"});
 }
 

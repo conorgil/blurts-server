@@ -11,6 +11,7 @@ function home(req, res) {
     featuredBreach = req.app.locals.breaches.filter(breach => breach.Name.toLowerCase() === reqBreachName)[0];
     scanFeaturedBreach = true;
   }
+  // TODO: l10n
   res.render("monitor", {
     title: "Firefox Monitor",
     featuredBreach: featuredBreach,
@@ -22,7 +23,7 @@ function home(req, res) {
 
 function notFound(req, res) {
   res.status(404);
-  res.render("error", { message: "Page not found." });
+  res.render("error", { message: req.fluentFormat("notFound") });
 }
 
 module.exports = {
