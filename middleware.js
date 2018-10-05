@@ -3,6 +3,7 @@
 
 const acceptLanguage = require("accept-language");
 
+const { FluentError } = require("./locale-utils");
 const mozlog = require("./log");
 
 
@@ -36,6 +37,14 @@ function logErrors (err, req, res, next) {
 }
 
 
+function localizeErrorMessages (err, req, res, next) {
+  if (err instanceof FluentError) {
+    err.message = req.fluentFormat(err.fluentID);
+  }
+  next(err);
+}
+
+
 function clientErrorHandler (err, req, res, next) {
   if (req.xhr || req.headers["content-type"] === "application/json") {
     res.status(500).send({ message: err.message });
@@ -46,6 +55,7 @@ function clientErrorHandler (err, req, res, next) {
 
 
 function errorHandler (err, req, res, next) {
+  console.log("errorHandler, err.message: ", err.message);
   res.status(500);
   res.render("error", { message: err.message });
 }
@@ -55,6 +65,7 @@ module.exports = {
   pickLanguage,
   asyncMiddleware,
   logErrors,
+  localizeErrorMessages,
   clientErrorHandler,
   errorHandler,
 };

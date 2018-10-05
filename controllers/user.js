@@ -15,8 +15,7 @@ async function add(req, res) {
   const email = req.body.email;
 
   if (!email || !isemail.validate(email)) {
-    // TODO: l10n
-    throw new Error("Invalid Email");
+    throw new Error(req.fluentFormat("user-add-invalid-email"));
   }
   const fxNewsletter = Boolean(req.body.additionalEmails);
 
@@ -24,25 +23,22 @@ async function add(req, res) {
   const verifyUrl = EmailUtils.verifyUrl(unverifiedSubscriber);
   const unsubscribeUrl = EmailUtils.unsubscribeUrl(unverifiedSubscriber);
 
-  // TODO: l10n
   await EmailUtils.sendEmail(
     email,
-    "Verify your subscription to Firefox Monitor.",
+    req.fluentFormat("user-email-verify-subscribe"),
     "email_verify",
     { email, verifyUrl, unsubscribeUrl },
   );
 
-  // TODO: l10n
   res.send({
-    title: "Firefox Monitor : Confirm Email",
+    title: req.fluentFormat("user-add-title"),
   });
 }
 
 
 async function verify(req, res) {
   if (!req.query.token) {
-    // TODO: l10n
-    throw new Error("Verification token is required.");
+    throw new Error(req.fluentFormat("user-verify-token-error"));
   }
   const verifiedEmailHash = await DB.verifyEmailHash(req.query.token);
   const unsubscribeUrl = EmailUtils.unsubscribeUrl(verifiedEmailHash);
@@ -52,10 +48,9 @@ async function verify(req, res) {
     req.app.locals.breaches
   );
 
-  // TODO: l10n
   await EmailUtils.sendEmail(
     verifiedEmailHash.email,
-    "Your Firefox Monitor report",
+    req.fluentFormat("user-verify-email-report-subject"),
     "report",
     {
       TIPS,
@@ -66,9 +61,8 @@ async function verify(req, res) {
     }
   );
 
-  // TODO: l10n
   res.render("confirm", {
-    title: "Firefox Monitor: Subscribed",
+    title: req.fluentFormat("user-verify-title"),
     email: verifiedEmailHash.email,
   });
 }
@@ -76,19 +70,16 @@ async function verify(req, res) {
 
 async function getUnsubscribe(req, res) {
   if (!req.query.token) {
-    // TODO: l10n
-    throw new Error("Unsubscribe requires a token.");
+    throw new Error(req.fluentFormat("user-unsubscribe-token-error"));
   }
   const subscriber = await DB.getSubscriberByToken(req.query.token);
   //throws error if user backs into and refreshes unsubscribe page
   if (!subscriber) {
-    // TODO: l10n
-    throw new Error("This email address is not subscribed to Firefox Monitor.");
+    throw new Error(req.fluentFormat("error-not-subscribed"));
   }
 
-  // TODO: l10n
   res.render("unsubscribe", {
-    title: "Firefox Monitor: Unsubscribe",
+    title: req.fluentFormat("user-unsubscribe-title"),
     token: req.query.token,
     hash: req.query.hash,
   });
@@ -97,14 +88,12 @@ async function getUnsubscribe(req, res) {
 
 async function postUnsubscribe(req, res) {
   if (!req.body.token || !req.body.emailHash) {
-    // TODO: l10n
-    throw new Error("Unsubscribe requires a token and emailHash.");
+    throw new Error(req.fluentFormat("user-unsubscribe-token-email-error"));
   }
   const unsubscribedUser = await DB.removeSubscriberByToken(req.body.token, req.body.emailHash);
   // if user backs into unsubscribe page and clicks "unsubscribe" again
   if (!unsubscribedUser) {
-    // TODO: l10n
-    throw new Error("This email address is not subscribed to Firefox Monitor.");
+    throw new Error(req.fluentFormat("error-not-subscribed"));
   }
 
   const surveyTicket = crypto.randomBytes(40).toString("hex");
@@ -117,12 +106,10 @@ async function postUnsubscribe(req, res) {
 function getUnsubSurvey(req, res) {
   //throws error if user refreshes unsubscribe survey page after they have submitted an answer
   if(!req.session.unsub) {
-    // TODO: l10n
-    throw new Error("This email address is not subscribed to Firefox Monitor.");
+    throw new Error(req.fluentFormat("error-not-subscribed"));
   }
-  // TODO: l10n
   res.render("unsubscribe_survey", {
-  title: "Firefox Monitor: Unsubscribe Survey",
+  title: req.fluentFormat("user-unsubscribe-survey-title"),
   UNSUB_REASONS,
   });
 }
@@ -131,9 +118,8 @@ function getUnsubSurvey(req, res) {
 function postUnsubSurvey(req, res) {
   //clear session in case a user subscribes / unsubscribes multiple times or with multiple email addresses.
   req.session.reset();
-  // TODO: l10n
   res.send({
-    title: "Firefox Monitor: Unsubscribed",
+    title: req.fluentFormat("user-unsubscribed-title"),
   });
 }
 

@@ -11,7 +11,7 @@ const url = require("url");
 const EmailUtils = require("./email-utils");
 const HBSHelpers = require("./hbs-helpers");
 const HIBP = require("./hibp");
-const {pickLanguage, logErrors, clientErrorHandler, errorHandler} = require("./middleware");
+const {pickLanguage, logErrors, localizeErrorMessages, clientErrorHandler, errorHandler} = require("./middleware");
 const locale = require("./locale-utils");
 const mozlog = require("./log");
 
@@ -124,6 +124,7 @@ app.use("/user", UserRoutes);
 app.use("/", HomeRoutes);
 
 app.use(logErrors);
+app.use(localizeErrorMessages);
 app.use(clientErrorHandler);
 app.use(errorHandler);
 

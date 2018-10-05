@@ -39,8 +39,7 @@ function init(req, res, next, client = FxAOAuthClient) {
 
 async function confirmed(req, res, next, client = FxAOAuthClient) {
   if (!req.session.state) {
-    // TODO: l10n
-    throw new Error("Invalid session");
+    throw new Error(req.fluentFormat("oauth-invalid-session"));
   }
 
   const fxaUser = await client.code.getToken(req.originalUrl, { state: req.session.state });
@@ -53,9 +52,8 @@ async function confirmed(req, res, next, client = FxAOAuthClient) {
   const email = JSON.parse(data.body).email;
   await DB.addSubscriber(email);
 
-  // TODO: l10n
   res.render("confirm", {
-    title: "Firefox Monitor : Subscribed",
+    title: req.fluentFormat("oauth-confirmed-title"),
     email: email,
   });
 }

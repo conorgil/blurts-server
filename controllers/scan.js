@@ -38,9 +38,8 @@ async function post (req, res) {
         foundBreaches = true;
       }
     }
-    // TODO: l10n
     res.render("scan", {
-      title: "Firefox Monitor : Scan Results",
+      title: req.fluentFormat("scan-title"),
       foundBreaches,
       featuredBreach,
       userAccountCompromised,
@@ -49,9 +48,8 @@ async function post (req, res) {
   }
 
   else {
-    // TODO: l10n
     res.render("scan", {
-      title: "Firefox Monitor : Scan Results",
+      title: req.fluentFormat("scan-title"),
       foundBreaches,
       passwordTips: TIPS,
     });

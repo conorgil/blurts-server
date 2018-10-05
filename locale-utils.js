@@ -13,6 +13,23 @@ const log = mozlog("middleware");
 const localesDir = path.join("public", "locales");
 
 
+class FluentError extends Error {
+  constructor(fluentID = null, ...params) {
+    console.log("FluentError constructor");
+    console.log("fluentID: ", fluentID);
+    console.log("params: ", ...params);
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      console.log("Error.captureStackTrace");
+      Error.captureStackTrace(this, FluentError);
+    }
+
+    this.fluentID = fluentID;
+  }
+}
+
+
 function loadLanguagesIntoApp (app) {
   const languageDirectories = fs.readdirSync( localesDir ).filter(item => {
     return (item[0] !== "." && item.length === 2)
@@ -36,5 +53,6 @@ function loadLanguagesIntoApp (app) {
 
 
 module.exports = {
+  FluentError,
   loadLanguagesIntoApp,
 };
